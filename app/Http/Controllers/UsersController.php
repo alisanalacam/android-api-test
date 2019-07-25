@@ -5,6 +5,8 @@ use App\Http\Resources\UsersResource;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 /**
  * Class UsersController
  * @property User user
@@ -36,5 +38,21 @@ class UsersController extends Controller
         $query = $this->user->orderBy($request->column ?? 'id', $request->order ?? 'ASC');
         $users = $query->paginate($request->per_page ?? 10);
         return UsersResource::collection($users);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->all();
+
+        $user = User::create([
+            'name' => $data['name'],
+            'surname' => $data['surname'],
+            'gender' => $data['gender'],
+            'email' => $data['email'],
+            'id_number' => $data['id_number'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        return response()->json($user);
     }
 }
