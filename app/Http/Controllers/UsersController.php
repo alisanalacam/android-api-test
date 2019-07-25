@@ -33,7 +33,7 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $this->user->orderBy($request->column, $request->order);
+        $query = $this->user->orderBy($request->column ?? 'id', $request->order ?? 'ASC');
         $users = $query->paginate($request->per_page ?? 10);
         return UsersResource::collection($users);
     }
