@@ -6,6 +6,7 @@ use App\Http\Resources\UsersResource;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class UsersController
@@ -43,6 +44,14 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'email|string|max:255|unique:users',
+            'id_number' => 'required|string|max:11|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        dd($validatedData);
 
         $user = User::create([
             'name' => $data['name'],
