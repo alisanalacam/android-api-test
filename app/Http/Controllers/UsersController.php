@@ -44,14 +44,17 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
-        $validatedData = $request->validate([
+        
+	$validationData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'email|string|max:255|unique:users',
             'id_number' => 'required|string|max:11|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
-        dd($validatedData);
+
+	if ($validationData->fails()) {
+	    return response()->json($validationData->errors()->toArray(), 422);
+	}
 
         $user = User::create([
             'name' => $data['name'],
